@@ -1,0 +1,24 @@
+{
+  "name": "beastmaster-earthbender",
+  "version": "0.0.1",
+  "description": "Cool MMO RPG abound underground world",
+  "main": "src/server.ts",
+  "scripts": {
+    "start": "ts-node src/server.ts"
+  },
+  "keywords": [
+    "game",
+    "mmo",
+    "websocket"
+  ],
+  "author": "gdcn",
+  "license": "ISC",
+  "dependencies": {
+    "@types/express": "^4.17.13",
+    "@types/socket.io": "^3.0.2",
+    "express": "^4.17.1",
+    "socket.io": "^4.3.1",
+    "ts-node": "^10.3.0",
+    "typescript": "^4.4.4"
+  }
+}
