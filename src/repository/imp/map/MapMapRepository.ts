@@ -3,26 +3,46 @@ import {User} from "../../../../model/entities/User";
 import {UserPhysics} from "../../../world/objects/UserPhysics";
 import {TileContent, WorldTile} from "../../../../model/entities/WorldTile";
 import {UserId} from "../../../../model/entities/UserId";
+import {Polygon} from 'detect-collisions';
 
 export class MapMapRepository implements MapRepository {
 
-    map: WorldTile[][];
-    players: Map<UserId, UserPhysics>;
-
-    constructor() {
-        this.map = createBorderWorld();
-    }
+    map: WorldTile[][] = createBorderWorld();
+    players: Map<UserId, UserPhysics> = new Map<UserId, UserPhysics>();
+    startTile: WorldTile = this.map[2][2];
 
     getPlayerPhysics(user: User): UserPhysics {
-        return undefined;
+        if (this.players.has(user.id)) {
+            return this.players.get(user.id);
+        } else {
+            const physics = new UserPhysics(
+                new Polygon(
+                    this.startTile.globalX,
+                    this.startTile.globalY,
+                    [
+                        [-10, -10],
+                        [10, -10],
+                        [10, 10],
+                        [-10, 10]
+                    ]
+                )
+            );
+            user.physics = physics;
+            return physics;
+        }
     }
 
     getWorld(): WorldTile[][] {
-        return [];
+        return this.map;
     }
 
     updateUserTile(user: User) {
+
     }
+
+}
+
+function createPlayerPhysics(user: User) {
 
 }
 

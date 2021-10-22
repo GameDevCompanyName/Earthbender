@@ -4,6 +4,8 @@ import {WorldTile} from "../../model/entities/WorldTile";
 import {StonePhysics} from "./objects/StonePhysics";
 import {User} from "../../model/entities/User";
 import {bounceIfCollides, updateCoords, updateSpeedForce} from "./EngineUtils";
+import {UserPhysics} from "./objects/UserPhysics";
+import {WorldObject} from "./objects/WorldObject";
 
 export const TILE_SIZE = 100;
 
@@ -29,6 +31,10 @@ export class World {
         users.forEach(user => {
             bounceIfCollides(user.physics);
         });
+    }
+
+    private addBody(physics: WorldObject) {
+        this.collisions.insert(physics.getBody());
     }
 
     private initWorld() {
