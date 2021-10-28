@@ -1,4 +1,4 @@
-import {User} from "../entities/User";
+import {User} from "../../model/entities/User";
 
 export interface UserRepository {
     userExists(name: string): boolean;

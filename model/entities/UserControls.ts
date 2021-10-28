@@ -1,9 +1,15 @@
-import { Vector } from 'vector2d';
+import { AbstractVector, Vector } from 'vector2d';
 
 export class UserControls {
-    forceDirection: Vector;
+    readonly x: number;
+    readonly y: number;
 
-    constructor(vector: Vector) {
-        this.forceDirection = vector;
+    constructor(x: number, y: number) {
+        this.x = x;
+        this.y = y;
+    }
+
+    getForceVector() : AbstractVector {
+        return new Vector(this.x, this.y);
     }
 }

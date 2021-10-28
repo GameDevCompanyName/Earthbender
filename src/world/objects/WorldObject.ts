@@ -1,4 +1,4 @@
-import { Body } from 'detect-collisions';
+import { Polygon } from 'detect-collisions';
 import { AbstractVector } from 'vector2d';
 
 export enum WorldObjectType {
@@ -8,7 +8,7 @@ export enum WorldObjectType {
 export interface WorldObject {
     getType(): WorldObjectType;
     isStatic(): boolean;
-    getBody(): Body;
+    getBody(): Polygon;
     getSpeed(): AbstractVector;
     getForce(): AbstractVector;
     setSpeed(speed: AbstractVector);

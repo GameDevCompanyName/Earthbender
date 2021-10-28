@@ -1,14 +1,15 @@
 import {WorldObject, WorldObjectType} from "./WorldObject";
 import {Polygon} from 'detect-collisions';
-import {Vector} from 'vector2d';
-import {TILE_SIZE} from "../World";
+import {Vector, AbstractVector} from 'vector2d';
+import {GameConfig} from "../../GameConfig";
 
-const HALF_TILE = TILE_SIZE / 2;
+const config: GameConfig = new GameConfig();
+
 export const STONE_POLYGON_POINTS = [
-    [-HALF_TILE, -HALF_TILE],
-    [+HALF_TILE, -HALF_TILE],
-    [+HALF_TILE, +HALF_TILE],
-    [-HALF_TILE, +HALF_TILE],
+    [-config.HALF_TILE, -config.HALF_TILE],
+    [+config.HALF_TILE, -config.HALF_TILE],
+    [+config.HALF_TILE, +config.HALF_TILE],
+    [-config.HALF_TILE, +config.HALF_TILE],
 ];
 
 export class StonePhysics implements WorldObject {
@@ -16,8 +17,8 @@ export class StonePhysics implements WorldObject {
 
     constructor(globalX: number, globalY: number) {
         this.body = new Polygon(
-            globalX * TILE_SIZE + HALF_TILE,
-            globalY * TILE_SIZE + HALF_TILE,
+            globalX * config.TILE_SIZE + config.HALF_TILE,
+            globalY * config.TILE_SIZE + config.HALF_TILE,
             STONE_POLYGON_POINTS
         );
     }
@@ -42,11 +43,11 @@ export class StonePhysics implements WorldObject {
         return true;
     }
 
-    setSpeed(speed: Vector) {
+    setSpeed(speed: AbstractVector) {
         throw new Error("Cannot set force for static Object");
     }
 
-    setForce(force: Vector) {
+    setForce(force: AbstractVector) {
         throw new Error("Cannot set force for static Object");
     }
 

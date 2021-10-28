@@ -8,8 +8,9 @@ const http = createServer(app);
 const io: Server = new Server(http);
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + 'client/public/index.html');
+    res.sendFile(__dirname + '/tempClient/index.html');
 });
+app.use(express.static(__dirname + '/tempClient'));
 
 new GameServer(io);
 

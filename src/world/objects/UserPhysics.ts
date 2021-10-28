@@ -1,21 +1,24 @@
 import {WorldObject, WorldObjectType} from "./WorldObject";
 import {AbstractVector} from 'vector2d';
-import {Body} from 'detect-collisions';
+import {Polygon} from 'detect-collisions';
 import {NULL_VECTOR} from "../EngineUtils";
+import {UserId} from "../../../model/entities/UserId";
 
 export class UserPhysics implements WorldObject {
 
-    body: Body;
+    body: Polygon;
     speed: AbstractVector;
     force: AbstractVector;
+    id: UserId;
 
-    constructor(body: Body) {
+    constructor(body: Polygon, id: UserId) {
         this.body = body;
         this.speed = NULL_VECTOR.clone();
         this.force = NULL_VECTOR.clone();
+        this.id = id;
     }
 
-    getBody(): Body {
+    getBody(): Polygon {
         return this.body;
     }
 

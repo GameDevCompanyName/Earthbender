@@ -1,5 +1,5 @@
-import {User} from "./User";
-import {Body} from 'detect-collisions';
+import {Polygon} from 'detect-collisions';
+import {StonePhysics} from "../../src/world/objects/StonePhysics";
 
 export enum TileContent {
     NOTHING, STONE
@@ -8,18 +8,16 @@ export enum TileContent {
 export class WorldTile {
     globalX: number;
     globalY: number;
-    body: Body;
+    physics: StonePhysics;
     contents: TileContent;
-    users: Set<User>;
 
     constructor(globalX: number, globalY: number, contents: TileContent) {
         this.globalX = globalX;
         this.globalY = globalY;
         this.contents = contents;
-        this.users = new Set<User>();
     }
 
-    setBody(body: Body) {
-        this.body = body;
+    setBody(physics: StonePhysics) {
+        this.physics = physics;
     }
 }
