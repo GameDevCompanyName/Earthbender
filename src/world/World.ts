@@ -16,6 +16,7 @@ export class World {
     }
 
      tick(users: User[]) {
+        console.time('tick');
         users.forEach(user => {
             const controls = user.controls;
             const physics = user.physics;
@@ -28,6 +29,7 @@ export class World {
             bounceIfCollides(user.physics, this.collisions);
             this.mapRep.updateUserTile(user);
         });
+        console.timeEnd('tick');
     }
 
     addUser(user: User) {

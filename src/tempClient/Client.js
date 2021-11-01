@@ -10,7 +10,7 @@ socket.on('env', (json) => {
 
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'yellow';
+    ctx.fillStyle = '#4f4848';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     const drawOffSetX = data.currentUser.body.x - (canvas.width * SCALE / 2);
@@ -20,7 +20,7 @@ socket.on('env', (json) => {
         let x = ((worldObject.body.x - drawOffSetX) / SCALE);
         let y = ((worldObject.body.y - drawOffSetY) / SCALE);
         if (!worldObject.id) {
-            ctx.fillStyle = 'blue';
+            ctx.fillStyle = '#2d2a29';
             ctx.fillRect(x - (50 / SCALE), y - (50 / SCALE),100 / SCALE,100 / SCALE);
         } else {
             ctx.fillStyle = 'red';

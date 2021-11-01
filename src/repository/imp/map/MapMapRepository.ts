@@ -7,6 +7,7 @@ import {Polygon} from 'detect-collisions';
 import {Environment} from "../../../../model/messages/Environment";
 import {GameConfig} from "../../../GameConfig";
 import {WorldObject} from "../../../world/objects/WorldObject";
+import {generateWorld} from "../../../generation/WorldGenerator";
 
 export class MapMapRepository implements MapRepository {
 
@@ -17,6 +18,10 @@ export class MapMapRepository implements MapRepository {
     tileToUsers: Map<WorldTile, Set<UserPhysics>> = new Map<WorldTile, Set<UserPhysics>>();
     map: WorldTile[][] = this.createBorderWorld();
     startTile: WorldTile = this.map[2][2];
+
+    constructor() {
+        this.map = generateWorld();
+    }
 
     getPlayerPhysics(user: User): UserPhysics {
         if (this.players.has(user.id)) {
@@ -44,11 +49,22 @@ export class MapMapRepository implements MapRepository {
         }
 
         if (prevTile) {
-            this.tileToUsers.get(prevTile).delete(physics);
+            const prevSet: Set<UserPhysics> = this.tileToUsers.get(prevTile);
+            if (prevSet) {
+                prevSet.delete(physics);
+                if (prevSet.size < 1) {
+                    this.tileToUsers.delete(prevTile);
+                }
+            }
             this.userToTile.delete(physics);
         }
 
-        this.tileToUsers.get(newTile).add(physics);
+        let newSet: Set<UserPhysics> = this.tileToUsers.get(newTile);
+        if (!newSet) {
+            newSet = new Set<UserPhysics>();
+            this.tileToUsers.set(newTile, newSet);
+        }
+        newSet.add(physics);
         this.userToTile.set(physics, newTile);
     }
 
@@ -58,15 +74,18 @@ export class MapMapRepository implements MapRepository {
         const left_x = centerTile.globalX - this.config.ENVIRONMENT_OFFSET;
         const top_y = centerTile.globalY - this.config.ENVIRONMENT_OFFSET;
 
-        for (let y = Math.max(top_y, 0); y < Math.min((top_y + this.config.ENVIRONMENT_SIZE), this.config.WORLD_SIZE); y++) {
-            for (let x = Math.max(left_x, 0); x < Math.min((left_x + this.config.ENVIRONMENT_SIZE), this.config.WORLD_SIZE); x++) {
+        for (let y = Math.max(top_y, 0); y < Math.min((top_y + this.config.ENVIRONMENT_SIZE), this.config.WORLD_HEIGHT); y++) {
+            for (let x = Math.max(left_x, 0); x < Math.min((left_x + this.config.ENVIRONMENT_SIZE), this.config.WORLD_WIDTH); x++) {
                 const currentTile = this.map[y][x];
                 if (currentTile.contents === TileContent.STONE) {
                     objects.push(currentTile.physics);
                 }
-                [...this.tileToUsers.get(currentTile).values()].forEach(physics => {
-                    objects.push(physics);
-                });
+                const userSet = this.tileToUsers.get(currentTile);
+                if (userSet) {
+                    [...userSet.values()].forEach(physics => {
+                        objects.push(physics);
+                    });
+                }
             }
         }
 
@@ -98,17 +117,16 @@ export class MapMapRepository implements MapRepository {
 
     private createBorderWorld(): WorldTile[][] {
         const world: WorldTile[][] = [];
-        for (let y = 0; y < this.config.WORLD_SIZE; y++) {
+        for (let y = 0; y < this.config.WORLD_HEIGHT; y++) {
             const line: WorldTile[] = [];
-            for (let x = 0; x < this.config.WORLD_SIZE; x++) {
+            for (let x = 0; x < this.config.WORLD_WIDTH; x++) {
                 let tile: WorldTile;
-                if (x === 0 || x === this.config.WORLD_SIZE - 1 || y === 0 || y === this.config.WORLD_SIZE - 1) {
+                if (x === 0 || x === this.config.WORLD_WIDTH - 1 || y === 0 || y === this.config.WORLD_HEIGHT - 1) {
                     tile = new WorldTile(x, y, TileContent.STONE);
                 } else {
                     tile = new WorldTile(x, y, TileContent.NOTHING);
                 }
                 line.push(tile);
-                this.tileToUsers.set(tile, new Set<UserPhysics>());
             }
             world.push(line);
         }
